@@ -13,9 +13,9 @@ echo "<h2>Bybit API PHP XRPUSDT Spot Scalping Bot</h2>";
 
 echo "<h3>Using 5m close for RSI</h3>";
 
-echo "<p>Set to buy on bullish EMA and RSI below 30</p>";
+echo "<p>Set to buy on bullish EMA and RSI below 40</p>";
 
-echo "<p>Set to sell on bearish EMA and RSI above 70</p><br><hr>";
+echo "<p>Set to sell on bearish EMA and RSI above 60</p><br><hr>";
 // Bybit API Key
 $api_key = "your_bybit_api_key";
 // Bybit API Secret
