@@ -1,11 +1,13 @@
 # OpenAI-PHPBybitAPIScalperBOT
 
-Version: 0.1
+Version: 0.2
 Author: OpenAI GPT/ Stephen Phillips
 Date: 2023/02/21
 
 Introduction
 ============
+CAUTION THIS SCRIPT IS IN TESTING ONLY
+
 I asked open GPT to write me a PHP Spot Scalping bot for the ETH USDT pair using the Bybit API and testnet, and specified that it use EMA cross and Stoch RSI indicators to decide when to buy and sell.
 
 This was generated from the playground at https://platform.openai.com/playground
@@ -19,15 +21,38 @@ You will also need to go to https://testnet.bybit.com/ and sign up to a testnet 
 
 Notes
 =====
-After testing I found several faults with this script, in the form provided via OpenAI GPT it didn't work.
+After testing I found several faults with the original script as provided by OpenAI GPT, which in the form provided via OpenAI GPT it didn't work.
 
-Firstly it uses Bybit API V2, However the latest version is V3 (See https://bybit-exchange.github.io/docs/v3/intro) and as a more modern AI model with more up to date data I would have expected it to use the latest version of the API, and unfortunately it's use of V2 of the API led to it not working as the calls no longer worked. 
+Firstly it used Bybit API V2, However the latest version is V3 (See https://bybit-exchange.github.io/docs/v3/intro) and as a more modern AI model with more up to date data I would have expected it to use the latest version of the API, but unfortunately it's use of V2 of the API led to the original script not working as the calls were no longer valid. 
 
 Secondly, I encountered a number of division by 0 errors in the function to calculate RSI which also broke the script.
 
 Thirdly, the Stoch RSI calculation was widely wrong and returned results with numbers over 20K and errors due to that which again broke things further.
 
-After Thoughts
+Fourthly, I think the EMA calculation was incorrect also as it basically always returned the same value for both long and short.
+
+Changes
+=======
+This script is the result of my testing and debugging of the script provided via OpenAI GPT, It's in somewhat of a messy state.
+
+I fixed the various errors detailed above, and have added several debug messages to the script to help with testing it.
+
+I removed the broken Stoch RSI calculation and replaced it to simply use the RSI calculation instead for the time being.
+
+I switched away from using the ETHUSDT pair for testing as for some reason on the BYBIT testnet ETHUSDT had a fixed flat price which of course meant the script could not work properly.
+
+The chart interval has been changed to 5 minutes to provide better results in regards of RSI calculation and EMA here as well.
+
+The Bybit API calls which it uses have also been replaced with the correct V3 API calls.
+
+I added in a quick calculation for a minimum order qty to buy and sell based around $25 worth of the token as I found with MARKET orders the API rejected buying only 1 XRP for $0.38 saying it is below the lower allowed limit, oddly enough with LIMIT though orders you can buy and sell only 1 XRP as much as you like with the API!
+
+I asked OpenAI for another new function to calculate the EMA values, although to be honest I am still not entirely sure it is working properly.
+
+Currently for testing I wrapped everything in HTML and added a META refresh of 5 minutes so you can just load it in a browser and watch it run, it did place a buy order earlier.
+
+Next Steps
 ==============
-Even after fixing the above issues I found this script to be not really usuable for chart intervals of 1 minute as OpenAI GPT had originally written it for, due to the limited amount of change in the closing prices for that interval it often wound up having division by 0 errors when trying to calculate the RSI, Which I tried to fix by adding an error value for this but the result was on the 1 minute timeframe it seemed to decide to do nothing far too often as a result.
-Also it chose for some reason to use a period of 10 for calculating the RSI instead of the standard 14.
+The next step here would be to test the script using buy and sell requests to see how it performed, and then I think I would look at adding some level of accounting to it where it remembered trade data and how much it had started with and invested, so as to allow more dynamic trading such as reinvesting of profits, rather than just simply always trying to buy or sell the same value of only 1 XRP every time, which to be fair is somewhat more akin to DCA than scalping, where typically you would set the script to invest a percentage of you total capital into the coin when buying along with a level of take profit and stop loss settings, with for example it waiting for a profit of a set percentage before selling as well as looking at TA to decide also.
+I think the addition of a configuration file would be good as well to hold various parameters relating to the script.
+Using a database such as MySQL to record transactions and data would offer more options as well.
