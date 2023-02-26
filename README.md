@@ -8,7 +8,7 @@ Introduction
 ============
 CAUTION THIS SCRIPT IS IN TESTING ONLY
 
-I asked open GPT to write me a PHP Spot Scalping bot for the ETH USDT pair using the Bybit API and testnet, and specified that it use EMA cross and Stoch RSI indicators to decide when to buy and sell.
+I asked openAI GPT to write me a PHP Spot Scalping bot for the ETH USDT pair using the Bybit API and testnet, and specified that it use EMA cross and Stoch RSI indicators to decide when to buy and sell.
 
 This was generated from the playground at https://platform.openai.com/playground
 
